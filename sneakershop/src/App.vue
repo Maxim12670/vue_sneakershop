@@ -19,7 +19,7 @@ import Drawer from "./components/Drawer.vue";
                             <option>По убыванию цены</option>
                         </select>
                         <div style="position: relative;">
-                            <img style="position: absolute; top: 15px; left: 8px;" src="../public/search.svg" alt="search_icon">
+                            <img style="position: absolute; top: 15px; left: 8px;" src="/search.svg" alt="search_icon">
                             <input class="input_search" type="text" placeholder="Поиск...">
                         </div>
                     </div>
