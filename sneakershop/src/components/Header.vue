@@ -2,7 +2,7 @@
 <template>
     <header class="header">
         <div class="header__logo">
-            <img src="../../public/logo.png" alt="logo">
+            <img src="/logo.png" alt="logo">
             <div>
                 <h2 class="header__title">vue sneakers</h2>
                 <p class="header__subtitle">Магазин лучших кроссовок</p>
@@ -10,15 +10,15 @@
         </div>
         <ul class="navigation">
             <li class="navigation__item">
-                <img src="../../public/cart.svg" alt="cart">
+                <img src="/cart.svg" alt="cart">
                 <b>1205 руб.</b>
             </li>
             <li class="navigation__item">
-                <img src="../../public/heart.svg" alt="heart">
+                <img src="/heart.svg" alt="heart">
                 <span>Закладки</span>
             </li>
             <li class="navigation__item">
-                <img src="../../public/profile.svg" alt="profile">
+                <img src="/profile.svg" alt="profile">
                 <span>Профиль</span>
             </li>
         </ul>
