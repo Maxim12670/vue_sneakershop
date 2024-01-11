@@ -1,7 +1,52 @@
 <script setup>
+import { onMounted, reactive, ref, watch } from "vue";
+
 import Header from "./components/Header.vue";
 import Cardist from "./components/CardList.vue";
 import Drawer from "./components/Drawer.vue";
+
+const items = ref([]);
+
+const filters = reactive({
+    sortBy: 'title',
+    searchQuery: ''
+});
+
+const getItems = async () => {
+    try {
+        const parametr = {
+            sortBy: filters.sortBy
+        }
+
+        let url = `https://6ffbb2d6fa3c52ee.mokky.dev/items?sortBy=${parametr.sortBy}`
+
+        if (filters.searchQuery) {
+            parametr.title = `*${filters.searchQuery}*`;
+            url = `https://6ffbb2d6fa3c52ee.mokky.dev/items?title=${parametr.title}&sortBy=${parametr.sortBy}`;
+        }
+
+        const data = await fetch(url)
+            .then(res => res.json())
+            .catch(error => console.log('Error:', error));
+
+        items.value = data;
+    }
+    catch (error) {
+        console.log(`Произошла ошибка: ${error}`);
+    }
+}
+
+const onChangedSelect = (event) => {
+    filters.sortBy = event.target.value;
+}
+
+const onChangedSearchInput = (event) => {
+    filters.searchQuery = event.target.value;
+}
+
+onMounted(getItems);
+
+watch(filters, getItems)
 </script>
 
 <template>
@@ -13,19 +58,19 @@ import Drawer from "./components/Drawer.vue";
                 <h2 class="title">Все кроссовки</h2>
                 <div>
                     <div style="display: flex;">
-                        <select class="select_list">
-                            <option>По названию</option>
-                            <option>По возрастанию цены</option>
-                            <option>По убыванию цены</option>
+                        <select @change="onChangedSelect" class="select_list">
+                            <option value="title">По названию</option>
+                            <option value="price">По возрастанию цены</option>
+                            <option value="-price">По убыванию цены</option>
                         </select>
                         <div style="position: relative;">
                             <img style="position: absolute; top: 15px; left: 8px;" src="/search.svg" alt="search_icon">
-                            <input class="input_search" type="text" placeholder="Поиск...">
+                            <input @input="onChangedSearchInput" class="input_search" type="text" placeholder="Поиск...">
                         </div>
                     </div>
                 </div>
             </div>
-            <Cardist />
+            <Cardist :items="items" />
         </div>
     </div>
 </template>

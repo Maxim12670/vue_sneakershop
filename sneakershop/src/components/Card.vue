@@ -12,10 +12,12 @@ defineProps({
 
 <template>
     <div class="card__wrapper">
-        <img @click="onClickFavorite" :src="!isFavorite ? '../../public/like-1.svg' : '../../public/like-2.svg'"
-            alt="favorite" class="btn_favorite">
-        <img :src="imageUrl" alt="sneaker">
-        <p>{{ title }}</p>
+        <div style="display: flex; flex-direction: column; align-items: center">
+            <img @click="onClickFavorite" :src="!isFavorite ? '../../public/like-1.svg' : '../../public/like-2.svg'"
+                alt="favorite" class="btn_favorite">
+            <img class="card__img" :src="imageUrl" alt="sneaker">
+            <p style="margin-top: 14px;">{{ title }}</p>
+        </div>
 
         <div class="card__desrc">
             <div class="card__info">
@@ -24,16 +26,17 @@ defineProps({
             </div>
             <img @click="onClickAdd" :src="!isAdded ? '../../public/plus.svg' : '../../public/checked.svg'" alt="plus">
         </div>
-
     </div>
 </template>
 
 <style scoped lang="sass">
 .card
     &__wrapper
+            width: 210px
+            height: 260px
             position: relative
             margin-top: 30px
-            padding: 2rem
+            padding: 20px 44px
             border: 1px solid #F3F3F3
             border-radius: 1.5rem
             background-color: #fff
@@ -50,6 +53,9 @@ defineProps({
         flex-direction: column
         &_price
             color: rgb(148 163 184)
+    &__img
+        width: 135px
+        height: 115px
 
 .btn_favorite
     position: absolute

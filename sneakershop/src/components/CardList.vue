@@ -1,15 +1,22 @@
 <script setup>
 import Card from "./Card.vue";
+
+defineProps({
+    items: Array
+})
 </script>
 
 <template>
     <div class="list">
         <Card 
-            title="Мужские кроссовки Nike Air" 
-            imageUrl="./public/sneakers/sneakers-1.jpg"
+            style="justify-self: center;"
+            v-for="item in items"
+            :key="item.id"
+            :title="item.title" 
+            :imageUrl="item.imageUrl"
             :isFavorite="false"
             :isAdded="false" 
-            :price="1250"
+            :price="item.price"
         />
     </div>
 </template>
