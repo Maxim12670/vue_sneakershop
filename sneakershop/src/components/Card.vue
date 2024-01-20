@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+
+const props = defineProps({
+    id: Number,
     title: String,
     imageUrl: String,
     price: Number,
@@ -8,6 +10,7 @@ defineProps({
     onClickAdd: Function,
     onClickFavorite: Function
 })
+
 </script>
 
 <template>

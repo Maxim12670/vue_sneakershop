@@ -1,4 +1,10 @@
+<script setup>
+import { inject } from 'vue';
 
+const openDrawer = inject('optionsDrawer');
+const {price} = inject('cart');
+
+</script>
 <template>
     <header class="header">
         <div class="header__logo">
@@ -9,9 +15,9 @@
             </div>
         </div>
         <ul class="navigation">
-            <li class="navigation__item">
+            <li class="navigation__item" @click="openDrawer">
                 <img src="/cart.svg" alt="cart">
-                <b>1205 руб.</b>
+                <b>{{ price }} руб.</b>
             </li>
             <li class="navigation__item">
                 <img src="/heart.svg" alt="heart">

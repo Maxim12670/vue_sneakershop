@@ -1,16 +1,95 @@
 <script setup>
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref, provide, watch, computed } from "vue";
 
 import Header from "./components/Header.vue";
 import Cardist from "./components/CardList.vue";
 import Drawer from "./components/Drawer.vue";
 
+const drawerFlag = ref(false);
+const buttonDisabled = ref(false);
 const items = ref([]);
-
+const cart = ref([]);
 const filters = reactive({
     sortBy: 'title',
     searchQuery: ''
 });
+
+const createOrder = () => {
+    try{
+        const obj = {
+            items: cart.value,
+            totalPrice: price.value
+        }
+
+        if(cart.value) {
+            const data = fetch('https://6ffbb2d6fa3c52ee.mokky.dev/carts', {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+
+            cart.value = [];
+            items.value = items.value.map(item => {
+                return {
+                    ...item,
+                    isAdded: false
+                }
+            })
+            console.log('отправил');
+        }
+        else{
+            console.log('массив пустой');
+        }
+    }
+    catch(error){
+        console.log(`Произошла ошибка: ${error}!`);
+    }
+}
+
+const price = computed(
+    () => cart.value.reduce((acc, item) => acc + item.price, 0)
+);
+
+const addToCart = (item) => {
+    if(!item.isAdded) {
+        cart.value.push(item);
+        item.isAdded = true;
+    }
+    else {
+        cart.value.splice(cart.value.indexOf(item), 1);
+        item.isAdded = false;
+    }
+}
+
+const openDrawer = () => {
+    drawerFlag.value = !drawerFlag.value;
+}
+
+const getFavoriteItems = async () => {
+    try {
+        const favorites = await fetch('https://6ffbb2d6fa3c52ee.mokky.dev/favorite')
+            .then(res => res.json());
+
+        items.value = items.value.map(item => {
+            const favorite = favorites.find(favorite => favorite.parentId === item.id);
+
+            if (!favorite) {
+                return item;
+            }
+
+            return {
+                ...item,
+                isFavorite: true,
+                favoriteId: favorite.id
+            }
+        });
+    }
+    catch (error) {
+        console.log(`Произошла ошибка: ${error}`);
+    }
+}
 
 const getItems = async () => {
     try {
@@ -26,10 +105,14 @@ const getItems = async () => {
         }
 
         const data = await fetch(url)
-            .then(res => res.json())
-            .catch(error => console.log('Error:', error));
+            .then(res => res.json());
 
-        items.value = data;
+        items.value = data.map((obj) => ({
+            ...obj,
+            favoriteId: null,
+            isFavorite: false,
+            isAdded: false
+        }));
     }
     catch (error) {
         console.log(`Произошла ошибка: ${error}`);
@@ -44,13 +127,63 @@ const onChangedSearchInput = (event) => {
     filters.searchQuery = event.target.value;
 }
 
-onMounted(getItems);
+const addToFavorite = async (item) => {
+    try {
+        const url = "https://6ffbb2d6fa3c52ee.mokky.dev/favorite";
 
-watch(filters, getItems)
+        if (!item.isFavorite) {
+            const obj = {
+                parentId: item.id
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"	
+                }
+            });
+
+            const data = await response.json();
+
+            item.isFavorite = true;
+            item.favoriteId = data.id;
+        }
+        else {
+            const data = await fetch(`${url}/${item.favoriteId}`, {
+                method: 'DELETE'
+            });
+
+            item.isFavorite = false;
+            item.favoriteId = null;
+        }
+    }
+    catch (error) {
+        console.log(`Произошла ошибка: ${error}`);
+    }
+}
+
+onMounted(async () => {
+    await getItems();
+    await getFavoriteItems();
+});
+
+watch(filters, getItems);
+provide('optionsDrawer', openDrawer);
+provide('cart', {
+    cart,
+    price,
+    addToCart
+});
+provide('order', {
+    buttonDisabled,
+    createOrder
+})
+
 </script>
 
 <template>
-    <!-- <Drawer/> -->
+    <Drawer v-if="drawerFlag"/>
     <div class="wrapper">
         <Header />
         <div class="content">
@@ -70,7 +203,7 @@ watch(filters, getItems)
                     </div>
                 </div>
             </div>
-            <Cardist :items="items" />
+            <Cardist :items="items" @addToFavorite="addToFavorite"/>
         </div>
     </div>
 </template>

@@ -1,11 +1,25 @@
+<script setup>
+import { inject } from 'vue';
+
+defineProps({
+    title: String,
+    imageUrl: String,
+    price: Number,
+    onClickAdd: Function,
+});
+
+const {addToCart} = inject('cart');
+
+</script>
+
 <template>
     <div class="cart">
-        <img class="cart__photo" src="../../public/sneakers/sneakers-1.jpg" alt="sneaker">
+        <img class="cart__photo" :src=imageUrl :alt=title>
         <div class="wrapper">
-            <span class="cart__name">Мужские кроссовки Nike Air</span>
+            <span class="cart__name">{{ title }}</span>
             <div class="container">
-                <b class="cart__price">12999 руб.</b>
-                <img class="btn__delete" src="../../public/close.svg" alt="delete">
+                <b class="cart__price">{{ price }} руб.</b>
+                <img @click="onClickAdd" class="btn__delete" src="../../public/close.svg" alt="delete">
             </div>
         </div>
     </div>
@@ -39,6 +53,9 @@
 .container
     display: flex
     justify-content: space-between
+
+.btn__delete
+    cursor: pointer
 
 
 </style>

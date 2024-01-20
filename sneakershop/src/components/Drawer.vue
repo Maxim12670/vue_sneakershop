@@ -1,6 +1,10 @@
 <script setup>
 import DrawerHead from "./DrawerHead.vue";
 import CartItemList from "./CartItemList.vue";
+import { inject } from "vue";
+
+const { price } = inject('cart');
+const { buttonDisabled, createOrder } = inject('order');
 </script>
 
 <template>
@@ -9,20 +13,20 @@ import CartItemList from "./CartItemList.vue";
         <div class="drawer">
             <DrawerHead />
 
-            <CartItemList/>
+            <CartItemList />
 
             <div class="result">
                 <div class="result__wrapper">
                     <span class="result__caption">Итого:</span>
                     <div></div>
-                    <b class="result__anmount">21489 руб</b>
+                    <b class="result__anmount">{{ price }} руб</b>
                 </div>
                 <div class="result__wrapper">
                     <span class="result__caption">Налог 5%:</span>
                     <div></div>
                     <b class="result__anmount">1074 руб</b>
                 </div>
-                <button class="result__btn">Оформить заказ</button>
+                <button @click="createOrder" :disabled="price === 0" class="result__btn">Оформить заказ</button>
             </div>
         </div>
     </div>
