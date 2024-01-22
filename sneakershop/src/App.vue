@@ -173,7 +173,8 @@ provide('optionsDrawer', openDrawer);
 provide('cart', {
     cart,
     price,
-    addToCart
+    addToCart,
+    addToFavorite
 });
 provide('order', {
     buttonDisabled,
@@ -203,7 +204,7 @@ provide('order', {
                     </div>
                 </div>
             </div>
-            <Cardist :items="items" @addToFavorite="addToFavorite"/>
+            <Cardist :items="items"/>
         </div>
     </div>
 </template>

@@ -1,10 +1,11 @@
 <script setup>
 import DrawerHead from "./DrawerHead.vue";
 import CartItemList from "./CartItemList.vue";
+import InfoBlockDrawer from "./InfoBlockDrawer.vue";
 import { inject } from "vue";
 
 const { price } = inject('cart');
-const { buttonDisabled, createOrder } = inject('order');
+const { createOrder } = inject('order');
 </script>
 
 <template>
@@ -13,20 +14,23 @@ const { buttonDisabled, createOrder } = inject('order');
         <div class="drawer">
             <DrawerHead />
 
-            <CartItemList />
+            <InfoBlockDrawer/>
 
-            <div class="result">
-                <div class="result__wrapper">
-                    <span class="result__caption">Итого:</span>
-                    <div></div>
-                    <b class="result__anmount">{{ price }} руб</b>
-                </div>
-                <div class="result__wrapper">
-                    <span class="result__caption">Налог 5%:</span>
-                    <div></div>
-                    <b class="result__anmount">1074 руб</b>
-                </div>
+            <div style="display: none;">
+                <CartItemList />
+                <div class="result">
+                    <div class="result__wrapper">
+                        <span class="result__caption">Итого:</span>
+                        <div></div>
+                        <b class="result__anmount">{{ price }} руб</b>
+                    </div>
+                    <div class="result__wrapper">
+                        <span class="result__caption">Налог 5%:</span>
+                        <div></div>
+                        <b class="result__anmount">1074 руб</b>
+                    </div>
                 <button @click="createOrder" :disabled="price === 0" class="result__btn">Оформить заказ</button>
+            </div>
             </div>
         </div>
     </div>

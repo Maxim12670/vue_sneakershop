@@ -4,9 +4,9 @@ import Card from "./Card.vue";
 
 defineProps({
     items: Array
-})
+});
 
-const {addToCart} = inject('cart');
+const {addToCart, addToFavorite} = inject('cart');
 </script>
 
 <template>
@@ -22,7 +22,7 @@ const {addToCart} = inject('cart');
             :isFavorite="item.isFavorite"
             :isAdded="item.isAdded"
             :onClickAdd="() => addToCart(item)"
-            :onClickFavorite="() => emit('addToFavorite', item)"/>
+            :onClickFavorite="() => addToFavorite(item)"/>
     </div>
 </template>
 
