@@ -14,9 +14,9 @@ const { createOrder } = inject('order');
         <div class="drawer">
             <DrawerHead />
 
-            <InfoBlockDrawer/>
+            <InfoBlockDrawer v-if="price === 0"/>
 
-            <div style="display: none;">
+            <div v-if="price != 0">
                 <CartItemList />
                 <div class="result">
                     <div class="result__wrapper">
