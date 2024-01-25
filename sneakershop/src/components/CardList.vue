@@ -6,7 +6,43 @@ defineProps({
     items: Array
 });
 
-const {addToCart, addToFavorite} = inject('cart');
+const {addToCart} = inject('cart');
+
+const addToFavorite = async (item) => {
+    try {
+        const url = "https://6ffbb2d6fa3c52ee.mokky.dev/favorite";
+
+        if (!item.isFavorite) {
+            const obj = {
+                parentId: item.id
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"	
+                }
+            });
+
+            const data = await response.json();
+
+            item.isFavorite = true;
+            item.favoriteId = data.id;
+        }
+        else {
+            const data = await fetch(`${url}/${item.favoriteId}`, {
+                method: 'DELETE'
+            });
+
+            item.isFavorite = false;
+            item.favoriteId = null;
+        }
+    }
+    catch (error) {
+        console.log(`Произошла ошибка: ${error}`);
+    }
+}
 </script>
 
 <template>

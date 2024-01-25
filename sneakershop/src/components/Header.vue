@@ -8,7 +8,9 @@ const {price} = inject('cart');
 <template>
     <header class="header">
         <div class="header__logo">
-            <img src="/logo.png" alt="logo">
+            <router-link to="/">
+                <img src="/logo.png" alt="logo">
+            </router-link>
             <div>
                 <h2 class="header__title">vue sneakers</h2>
                 <p class="header__subtitle">Магазин лучших кроссовок</p>
@@ -19,10 +21,12 @@ const {price} = inject('cart');
                 <img src="/cart.svg" alt="cart">
                 <b>{{ price }} руб.</b>
             </li>
-            <li class="navigation__item">
-                <img src="/heart.svg" alt="heart">
-                <span>Закладки</span>
-            </li>
+            <router-link to="/favorite">
+                <li class="navigation__item">
+                    <img src="/heart.svg" alt="heart">
+                    <span>Закладки</span>
+                </li>
+            </router-link>
             <li class="navigation__item">
                 <img src="/profile.svg" alt="profile">
                 <span>Профиль</span>
