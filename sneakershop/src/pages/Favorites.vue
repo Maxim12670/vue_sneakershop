@@ -1,42 +1,15 @@
 <script setup>
-
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import CardList from '../components/CardList.vue';
+import InfoBlockFavorite from '../components/InfoBlockFavorite.vue';
 
-const items = ref([]);
 const favorites = ref([]);
-const array = ref([]);
-
-const getItems = async () => {
-    try {
-        items.value = await fetch('https://6ffbb2d6fa3c52ee.mokky.dev/items')
-            .then(res => res.json());
-    }
-    catch (error) {
-        console.log(`Произошла ошибка: ${error}`);
-    }
-}
 
 const getFavoritesItems = async () => {
     try {
         favorites.value = await fetch('https://6ffbb2d6fa3c52ee.mokky.dev/favorite')
             .then(res => res.json());
-    }
-    catch (error) {
-        console.log(`Произошла ошибка: ${error}`);
-    }
-}
-
-const selectionFavoriteInItems = () => {
-    try {
-        for (let i in items.value) {
-            for (let f in favorites.value) {
-                if (items.value[i].id === favorites.value[f].parentId) {
-                    array.value.push(items.value[i]);
-                }
-            }
-        }
-        console.log(items.value)
+        console.log('dove')
     }
     catch (error) {
         console.log(`Произошла ошибка: ${error}`);
@@ -44,18 +17,24 @@ const selectionFavoriteInItems = () => {
 }
 
 onMounted(async () => {
-    await getItems();
     await getFavoritesItems();
 });
-watch(selectionFavoriteInItems, getItems);
+
+watchEffect(async()=>{
+    await getFavoritesItems()
+})
 </script>
 
 <template>
     <div class="favorite">
-        <h2 class="favorite__title">
-            Мои закладки
-        </h2>
-        <card-list :items="array" />
+        <info-block-favorite v-if="favorites.length === 0"/>
+        <div v-else>
+            <h2 class="favorite__title">
+                Мои закладки
+            </h2>
+            <card-list :items="favorites" />
+        </div>
+        
     </div>
 </template>
 

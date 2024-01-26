@@ -13,8 +13,13 @@ const addToFavorite = async (item) => {
         const url = "https://6ffbb2d6fa3c52ee.mokky.dev/favorite";
 
         if (!item.isFavorite) {
+            item.isFavorite = true;
             const obj = {
-                parentId: item.id
+                parentId: item.id,
+                title: item.title,
+                price: item.price,
+                imageUrl: item.imageUrl,
+                isFavorite: item.isFavorite
             };
 
             const response = await fetch(url, {
@@ -26,17 +31,15 @@ const addToFavorite = async (item) => {
             });
 
             const data = await response.json();
-
-            item.isFavorite = true;
             item.favoriteId = data.id;
         }
         else {
-            const data = await fetch(`${url}/${item.favoriteId}`, {
-                method: 'DELETE'
-            });
-
             item.isFavorite = false;
             item.favoriteId = null;
+
+            await fetch(`${url}/${item.id}`, {
+                method: 'DELETE'
+            });
         }
     }
     catch (error) {
